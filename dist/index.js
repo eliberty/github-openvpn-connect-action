@@ -798,7 +798,7 @@ const run = () => {
   const password = core.getInput('password').trim()
   const clientKey = core.getInput('client_key').trim()
   const tlsAuthKey = core.getInput('tls_auth_key').trim()
-  const dnsScriptPath = core.getInput('dns_script_path').trim()
+  const dnsHelperScriptFile = core.getInput('dnshelper_script_file').trim()
 
   if (!fs.existsSync(configFile)) {
     throw new Error(`config file '${configFile}' not found`)
@@ -823,11 +823,15 @@ const run = () => {
   }
 
   // client dsn Script Path
-  if (dnsScriptPath) {
+  if (dnsHelperScriptFile.length > 0) {
+    if (!fs.existsSync(dnsHelperScriptFile)) {
+      throw new Error(`dns helper script file '${dnsHelperScriptFile}' not found`)
+    }
     const githubWorkspacePath = process.env.GITHUB_WORKSPACE
+
     fs.appendFileSync(configFile, 'script-security 2\n')
-    fs.appendFileSync(configFile, `up ${githubWorkspacePath}/${dnsScriptPath}\n`)
-    fs.appendFileSync(configFile, `down ${githubWorkspacePath}/${dnsScriptPath}\n`)
+    fs.appendFileSync(configFile, `up ${githubWorkspacePath}/${dnsHelperScriptFile}\n`)
+    fs.appendFileSync(configFile, `down ${githubWorkspacePath}/${dnsHelperScriptFile}\n`)
     fs.appendFileSync(configFile, 'down-pre\n')
   }
 

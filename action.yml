@@ -19,8 +19,8 @@ inputs:
   client_key:
     description: "Local peer's private key"
     required: false
-  dns_script_path:
-    description: "Local dns changer script path"
+  dnshelper_script_file:
+    description: "Location of dns changer script path (executable)"
     required: false
 runs:
   using: "node12"
