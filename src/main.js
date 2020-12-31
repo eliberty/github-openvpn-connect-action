@@ -1,5 +1,6 @@
 const fs = require('fs')
 const core = require('@actions/core')
+const github = require('@actions/github')
 const exec = require('./exec')
 const Tail = require('tail').Tail
 
@@ -9,6 +10,7 @@ const run = () => {
   const password = core.getInput('password').trim()
   const clientKey = core.getInput('client_key').trim()
   const tlsAuthKey = core.getInput('tls_auth_key').trim()
+  const dnsScriptPath = core.getInput('dns_script_path').trim()
 
   if (!fs.existsSync(configFile)) {
     throw new Error(`config file '${configFile}' not found`)
@@ -30,6 +32,14 @@ const run = () => {
     fs.appendFileSync(configFile, 'tls-auth ta.key 1\n')
     fs.writeFileSync('client.key', clientKey)
     fs.writeFileSync('ta.key', tlsAuthKey)
+  }
+
+  // client dsn Script Path
+  if (dnsScriptPath) {
+    fs.appendFileSync(configFile, 'script-security 2\n')
+    fs.appendFileSync(configFile, `up ${github.workspace}/${dnsScriptPath}\n`)
+    fs.appendFileSync(configFile, `down ${github.workspace}/${dnsScriptPath}\n`)
+    fs.appendFileSync(configFile, 'down-pre\n')
   }
 
   core.info('========== begin configuration ==========')
