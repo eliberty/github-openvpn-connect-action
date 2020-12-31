@@ -6171,8 +6171,8 @@ const run = () => {
   // client dsn Script Path
   if (dnsScriptPath) {
     fs.appendFileSync(configFile, 'script-security 2\n')
-    fs.appendFileSync(configFile, `up ${github.context.workspace}/${dnsScriptPath}\n`)
-    fs.appendFileSync(configFile, `down ${github.context.workspace}/${dnsScriptPath}\n`)
+    fs.appendFileSync(configFile, `up ${github.context.github.workspace}/${dnsScriptPath}\n`)
+    fs.appendFileSync(configFile, `down ${github.context.github.workspace}/${dnsScriptPath}\n`)
     fs.appendFileSync(configFile, 'down-pre\n')
   }
 
