@@ -1,6 +1,5 @@
 const fs = require('fs')
 const core = require('@actions/core')
-const github = require('@actions/github')
 const exec = require('./exec')
 const Tail = require('tail').Tail
 
@@ -36,9 +35,10 @@ const run = () => {
 
   // client dsn Script Path
   if (dnsScriptPath) {
+    const githubWorkspacePath = process.env.GITHUB_WORKSPACE
     fs.appendFileSync(configFile, 'script-security 2\n')
-    fs.appendFileSync(configFile, `up ${github.context.github.workspace}/${dnsScriptPath}\n`)
-    fs.appendFileSync(configFile, `down ${github.context.github.workspace}/${dnsScriptPath}\n`)
+    fs.appendFileSync(configFile, `up ${githubWorkspacePath}/${dnsScriptPath}\n`)
+    fs.appendFileSync(configFile, `down ${githubWorkspacePath}/${dnsScriptPath}\n`)
     fs.appendFileSync(configFile, 'down-pre\n')
   }
 
